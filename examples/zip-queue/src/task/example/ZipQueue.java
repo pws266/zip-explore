@@ -2,6 +2,7 @@ package task.example;
 
 import java.io.*;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Deque;
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -204,34 +205,12 @@ public class ZipQueue {
                         GZIPOutputStream gzos = new GZIPOutputStream(zos);
 
                         copyContent(gzin, gzos);
-/*
-                        byte[] buffer = new byte[1024];
-
-                        while (true) {
-                            int readCount = gzin.read(buffer, 0, 1024);
-
-                            if (readCount < 0) {
-                                break;
-                            }
-                            gzos.write(buffer, 0, readCount);
-                        }
-*/
-                        gzos.finish();
+                        //parseLines(gzin, gzos);
+                        //gzos.finish();
 
                     } else {
-                        copyContent(zin, zos);
-/*
-                        byte[] buffer = new byte[1024];
-
-                        while (true) {
-                            int readCount = zin.read(buffer, 0, 1024);
-
-                            if (readCount < 0) {
-                                break;
-                            }
-                            zos.write(buffer, 0, readCount);
-                        }
-*/
+                        //copyContent(zin, zos);
+                        parseLines(zin, zos);
                     }
 
                     zos.closeEntry();
@@ -254,7 +233,7 @@ public class ZipQueue {
 //        }
     }
 
-    public static void copyContent(InputStream is, OutputStream os) throws IOException{
+    public static void copyContent(InputStream is, OutputStream os) throws IOException {
         byte[] buffer = new byte[1024];
 
         while (true) {
@@ -267,9 +246,22 @@ public class ZipQueue {
         }
     }
 
-    public static void parseLines(InputStream is, OutputStream os) {
+    public static void parseLines(InputStream is, OutputStream os) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
 
+        String line;
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
 
+            writer.write(line, 0, line.length());
+            writer.newLine();
+        }
+
+        //reader.close();
+
+        writer.flush();
+        //writer.close();
     }
 
     public static void main(String[] args) {
