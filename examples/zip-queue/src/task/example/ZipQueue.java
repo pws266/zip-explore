@@ -3,9 +3,7 @@ package task.example;
 import java.io.*;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.Deque;
-import java.util.Enumeration;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.zip.*;
 
 /**
@@ -13,6 +11,8 @@ import java.util.zip.*;
  */
 public class ZipQueue {
     private static int RecursionLevel = 0;      //нельзя делать static!
+    private static HashSet<String> mail_list = new HashSet<String>();
+    private static HashSet<String> phones = new HashSet<String>();
 
     public static void pack(File pack_dir, String zip_name) throws IOException{
         URI base = pack_dir.toURI();
@@ -204,9 +204,9 @@ public class ZipQueue {
                         GZIPInputStream gzin = new GZIPInputStream(zin);
                         GZIPOutputStream gzos = new GZIPOutputStream(zos);
 
-                        copyContent(gzin, gzos);
-                        //parseLines(gzin, gzos);
-                        //gzos.finish();
+                        //copyContent(gzin, gzos);
+                        parseLines(gzin, gzos);
+                        gzos.finish();
 
                     } else {
                         //copyContent(zin, zos);
@@ -218,6 +218,9 @@ public class ZipQueue {
             }
 
             if(--RecursionLevel == 0) {
+                saveSortedData("phones.txt", zos, phones);
+                saveSortedData("emails.txt", zos, mail_list);
+
                 zin.close();
                 zos.close();
             } else {
@@ -252,9 +255,68 @@ public class ZipQueue {
 
         String line;
         while ((line = reader.readLine()) != null) {
-            System.out.println(line);
+            //System.out.println(line);
+            //ищем почтовую "собаку"
+            int dog_index = line.indexOf("@");
+            if(dog_index > 0) {
+                int mail_beg_index = line.lastIndexOf(" ", dog_index);      //разделителем может быть Tab, здесь лучше цифру поискать?
 
-            writer.write(line, 0, line.length());
+                System.out.println("Phone: " + line.substring(0, mail_beg_index));
+
+                //работаем с телефоном
+                int left_br_index = line.indexOf("(");
+                int right_br_index = line.indexOf(")");
+
+                StringBuffer phone_str = new StringBuffer(line.substring(0, mail_beg_index));
+
+                if(right_br_index > 0 && left_br_index > 0) {
+                    int code = (new Integer(line.substring(left_br_index + 1, right_br_index).trim())).intValue();
+                    //int code = new Integer(line.substring(left_br_index + 1, right_br_index));
+
+                    System.out.println("Code: " + code);
+                    System.out.println("Phone before: " + phone_str);
+
+                    //переделать через перечисления
+                    switch(code) {
+                        case 101: phone_str.replace(left_br_index + 1, right_br_index, "401"); break;
+                        case 202: phone_str.replace(left_br_index + 1, right_br_index, "802"); break;
+                        case 301: phone_str.replace(left_br_index + 1, right_br_index, "321"); break;
+                    }
+
+                    System.out.println("Phone after: " + phone_str);
+                }
+
+                //сохраняем телефон и список e-mail в потоке
+                writer.write(phone_str.toString(), 0, phone_str.length());
+                writer.write(line, mail_beg_index, line.length() - mail_beg_index);
+                //writer.write(line.substring(mail_beg_index), 0, line.substring(mail_beg_index).length());
+
+                //форматируем строку с телефоном
+                String formatted_phone = phone_str.toString().replace(" ", "").replace("-", "");
+
+                left_br_index = formatted_phone.indexOf("(");
+
+                right_br_index = formatted_phone.indexOf(")");
+                right_br_index += 1;    //потому что при вставке пробела перед левой скобкой размер индексов символов справа увеличится на 1
+
+                System.out.println("Formatted phone: " + (new StringBuffer(formatted_phone)).insert(left_br_index, " ").insert(right_br_index + 1, " "));
+                phones.add((new StringBuffer(formatted_phone)).insert(left_br_index, " ").insert(right_br_index + 1, " ").toString());
+
+                //работаем с почтой
+                StringTokenizer stok = new StringTokenizer(line.substring(mail_beg_index), " \t,;");
+
+                while(stok.hasMoreTokens()) {
+                    String mail = stok.nextToken().trim();
+                    if(mail.endsWith(".org")) {
+                        //System.out.println("E-mail: " + mail);
+                        mail_list.add(mail);
+                        //sorted.add(mail);
+                    }
+                }
+            } else {
+                writer.write(line, 0, line.length());
+            }
+
             writer.newLine();
         }
 
@@ -262,6 +324,26 @@ public class ZipQueue {
 
         writer.flush();
         //writer.close();
+    }
+
+    public static void saveSortedData(String filename, ZipOutputStream zos, HashSet<String> data) throws IOException {
+        zos.putNextEntry(new ZipEntry(filename));
+
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(zos, StandardCharsets.UTF_8));
+
+        List<String> sorted = new ArrayList<String>(data);
+        Collections.sort(sorted);
+
+        System.out.println("File: " + filename + "Sorted list: ");
+        for(String s : sorted) {
+            System.out.println(s);
+
+            writer.write(s, 0, s.length());
+            writer.newLine();
+        }
+
+        writer.flush();
+        zos.closeEntry();
     }
 
     public static void main(String[] args) {

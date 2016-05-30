@@ -12,7 +12,9 @@ import java.util.*;
  */
 public class Test {
     public static void main(String[] args) {
-        List<String> mail_list = new ArrayList<String>();
+        //List<String> mail_list = new ArrayList<String>();
+        HashSet<String> mail_list = new HashSet<String>();
+        //TreeSet<String> sorted = new TreeSet<String>();
 
         try {
             FileInputStream is = new FileInputStream(new File("../../files/for_parser.txt"));
@@ -37,20 +39,35 @@ public class Test {
                 int left_br_index = line.indexOf("(");
                 int right_br_index = line.indexOf(")");
 
+                StringBuffer phone_str = new StringBuffer(line.substring(0, mail_beg_index));
+
                 if(right_br_index > 0 && left_br_index > 0) {
                     int code = (new Integer(line.substring(left_br_index + 1, right_br_index).trim())).intValue();
+
                     System.out.println("Code: " + code);
-                    System.out.println("Phone before: " + line.substring(0, mail_beg_index));
+                    System.out.println("Phone before: " + phone_str);
 
                     //неправильно, переделать
                     switch(code) {
-                        case 101: line.replaceFirst("(101)", "(401)"); break;
-                        case 202: line.replaceFirst("(202)", "(802)"); break;
-                        case 301: line.replaceFirst("(301)", "(321)"); break;
+                        case 101: phone_str.replace(left_br_index + 1, right_br_index, "401"); break;
+                        case 202: phone_str.replace(left_br_index + 1, right_br_index, "802"); break;
+                        case 301: phone_str.replace(left_br_index + 1, right_br_index, "321"); break;
                     }
 
-                    System.out.println("Phone after: " + line.substring(0, mail_beg_index));
+                    System.out.println("Phone after: " + phone_str);
                 }
+
+                //здесь запихнуть "phone_str.toString()" в файл, за ним подстроку с почтами
+                //форматируем строку с телефоном
+                String formatted_phone = phone_str.toString().replace(" ", "").replace("-", "");
+
+                left_br_index = formatted_phone.indexOf("(");
+
+                right_br_index = formatted_phone.indexOf(")");
+                right_br_index += 1;
+
+
+                System.out.println("Formatted phone: " + (new StringBuffer(formatted_phone)).insert(left_br_index, " ").insert(right_br_index + 1, " "));
 
                 //работаем с почтой
                 StringTokenizer stok = new StringTokenizer(line.substring(mail_beg_index), " \t,;");
@@ -60,10 +77,12 @@ public class Test {
                     if(mail.endsWith(".org")) {
                         System.out.println("E-mail: " + mail);
                         mail_list.add(mail);
+                        //sorted.add(mail);
                     }
                 }
 
-                List<String> sorted = new ArrayList<String>(new HashSet<String>(mail_list));
+                //List<String> sorted = new ArrayList<String>(new HashSet<String>(mail_list));
+                List<String> sorted = new ArrayList<String>(mail_list);
                 Collections.sort(sorted);
 
                 System.out.println("Sorted mail list: ");
