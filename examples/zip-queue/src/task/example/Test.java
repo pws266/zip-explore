@@ -31,7 +31,9 @@ public class Test {
                 }
 
                 //слабое место: ищем пробел, посмотреть в сторону isSpace
-                int mail_beg_index = line.lastIndexOf(" ", dog_index);
+//                int mail_beg_index = line.lastIndexOf(" ", dog_index);
+//                int mail_beg_index = line.substring(0, dog_index).replace("\t", " ").replace(",", " ").replace(";", " ").lastIndexOf(" ");
+                int mail_beg_index = line.substring(0, dog_index).replaceAll("[\t;,]", " ").lastIndexOf(" ");
 
                 System.out.println("Phone: " + line.substring(0, mail_beg_index));
 
@@ -59,7 +61,8 @@ public class Test {
 
                 //здесь запихнуть "phone_str.toString()" в файл, за ним подстроку с почтами
                 //форматируем строку с телефоном
-                String formatted_phone = phone_str.toString().replace(" ", "").replace("-", "");
+                //String formatted_phone = phone_str.toString().replace(" ", "").replace("-", "");
+                String formatted_phone = phone_str.toString().replaceAll("[ \t;,-]", "");
 
                 left_br_index = formatted_phone.indexOf("(");
 
