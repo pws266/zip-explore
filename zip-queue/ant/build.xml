@@ -1,9 +1,9 @@
-<project name="Java Basics task build" default="compile">
+<project name="task.build" default="compile">
 	<property name="dir.build" value="../.build" />
 	<property name="dir.classes" value="${dir.build}/classes" />
 	<property name="dir.jar" value="${dir.build}/jar" />
 	<property name="dir.src" value="../src" />
-	<property name="dir.zip" value="../../../files" />
+	<property name="dir.zip" value="../../files" />
 	<property name="dir.repack" value="${dir.zip}" />
 	<property name="file.jar" value="${dir.jar}/java.basics.jar" />
 	<property name="file.zip" value="${dir.zip}/inputs.zip" />
@@ -35,7 +35,7 @@
 			 index="true">
 			<manifest>
 				<attribute name="Built-By" value="${java.user.name}" />
-				<attribute name="Main-Class" value="task.example.ZipQueue" />
+				<attribute name="Main-Class" value="study.task.ZipQueue" />
 				<section name="common">
 					<attribute name="Specification-Title" value="Java Basics course task"/>
 					<attribute name="Specification-Version" value="${sw.version}"/>
