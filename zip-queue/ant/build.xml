@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
 <project name="task.build" default="compile">
 	<property name="dir.build" value="../.build" />
 	<property name="dir.classes" value="${dir.build}/classes" />

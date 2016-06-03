@@ -24,7 +24,6 @@ class RefInfo {
     static final String mail_separators;        //set of separators between e-mail entries in line
 
     static final String sep_dog;        //the at sign in e-mail
-    static final String sep_hyphen;     //hyphen sign
     static final String sep_space;      //space sign
     static final String sep_no_sign;    //empty string for symbol removing from string
     static final String sep_dot;        //point sign
@@ -34,8 +33,9 @@ class RefInfo {
 
     static final String left_bracket;       //left round bracket sign
     static final String right_bracket;      //right round bracket sign
-    static final String left_sqbracket;     //left square bracket sign
-    static final String right_sqbracket;    //right square bracket sign
+
+    static final String regexp_sep_clean;   //regular expression for cleaning separators at the phone number end
+    static final String regexp_phone_trim;   //regular expression for phone number trimming
 
     static final String name_suffix;    //suffix for destination archive name
 
@@ -51,7 +51,6 @@ class RefInfo {
         mail_separators = " \t,;";
 
         sep_dog = "@";
-        sep_hyphen = "-";
         sep_space = " ";
         sep_no_sign = "";
         sep_dot = ".";
@@ -61,8 +60,8 @@ class RefInfo {
         left_bracket = "(";
         right_bracket = ")";
 
-        left_sqbracket = "[";
-        right_sqbracket = "]";
+        regexp_sep_clean = "[" + mail_separators.substring(1) + "]";
+        regexp_phone_trim = "[" + mail_separators + "-]";
 
         name_suffix = "v2";
 

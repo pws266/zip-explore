@@ -115,8 +115,7 @@ class ZipQueue {
             if(dog_index > 0) {
                 //separating phone number from e-mails set
                 //using regular expression due to lines without spaces between phone number and first e-mail in line
-                int mail_beg_index = line.substring(0, dog_index).replaceAll(RefInfo.left_sqbracket +
-                                        RefInfo.mail_separators.substring(1) + RefInfo.right_sqbracket,
+                int mail_beg_index = line.substring(0, dog_index).replaceAll(RefInfo.regexp_sep_clean,
                                         RefInfo.sep_space).lastIndexOf(RefInfo.sep_space);
 
                 //processing phone number: changing city code if necessary
@@ -139,9 +138,8 @@ class ZipQueue {
                 writer.write(line, mail_beg_index, line.length() - mail_beg_index);
 
                 //formatting phone number according task statement
-                String formatted_phone = phone_str.toString().replaceAll(RefInfo.left_sqbracket +
-                                            RefInfo.mail_separators + RefInfo.sep_hyphen + RefInfo.right_sqbracket,
-                                            RefInfo.sep_no_sign);
+                String formatted_phone = phone_str.toString().replaceAll(RefInfo.regexp_phone_trim,
+                                                                         RefInfo.sep_no_sign);
 
                 left_br_index = formatted_phone.indexOf(RefInfo.left_bracket);
 
@@ -153,7 +151,8 @@ class ZipQueue {
                             RefInfo.sep_space).insert(right_br_index + 1, RefInfo.sep_space).toString());
 
                 //processing e-mails set in line
-                StringTokenizer token_set = new StringTokenizer(line.substring(mail_beg_index), RefInfo.mail_separators);
+                StringTokenizer token_set = new StringTokenizer(line.substring(mail_beg_index),
+                                                                RefInfo.mail_separators);
 
                 while(token_set.hasMoreTokens()) {
                     String mail = token_set.nextToken().trim();
