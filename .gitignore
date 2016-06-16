@@ -1,0 +1,11 @@
+# Files #
+#########
+zip-queue/zip-queue.iws
+zip-queue/.idea/dataSources.local.xml
+files/inputsv2.zip
+
+# Directories #
+###############
+zip-queue/out/
+zip-queue/.build/
+

@@ -134,12 +134,22 @@ class ZipQueue {
                 }
 
                 //saving modified line in stream
-                writer.write(phone_str.toString(), 0, phone_str.length());
+                String save_phone = phone_str.toString();
+
+                writer.write(save_phone, 0, save_phone.length());
                 writer.write(line, mail_beg_index, line.length() - mail_beg_index);
 
                 //formatting phone number according task statement
-                String formatted_phone = phone_str.toString().replaceAll(RefInfo.regexp_phone_trim,
-                                                                         RefInfo.sep_no_sign);
+                String formatted_phone = save_phone.replaceAll(RefInfo.regexp_phone_trim, RefInfo.sep_no_sign);
+
+
+
+//                writer.write(phone_str.toString(), 0, phone_str.length());
+//                writer.write(line, mail_beg_index, line.length() - mail_beg_index);
+
+                //formatting phone number according task statement
+//                String formatted_phone = phone_str.toString().replaceAll(RefInfo.regexp_phone_trim,
+//                                                                         RefInfo.sep_no_sign);
 
                 left_br_index = formatted_phone.indexOf(RefInfo.left_bracket);
 
