@@ -3,7 +3,31 @@ package study.task;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.LogManager;
 import java.util.zip.*;
+
+/**
+ * Custom exception class for logs storage folder verification
+ *
+ * @author Sergey Sokhnyshev
+ * Created on 18.06.16.
+ */
+
+class LoggingFolderException extends Exception {
+    private String msg;
+
+    LoggingFolderException(String msg) {
+        // using superclass constructor for correct detailed message output
+        super(msg);
+        this.msg = msg;
+    }
+
+    public String toString() {
+        return "LoggingFolderException: " + msg;
+    }
+}
 
 /**
  * This application repacks nested *.zip archives including inner *.gz archives according the rules specified in
@@ -16,71 +40,95 @@ import java.util.zip.*;
 
 /** Class for nested archives viewing and repacking */
 class ZipQueue {
-    private int recursion_level;        //nesting level counter
-    private final HashSet<String> mail_list;  //storage of sorted e-mails
+    private static final Logger log = Logger.getLogger(ZipQueue.class.getName());
+
+    private int recursionLevel;        //nesting level counter
+    private final HashSet<String> mailList;  //storage of sorted e-mails
     private final HashSet<String> phones;     //storage of sorted phones
 
     private ZipQueue() {
-        recursion_level = 0;
-        mail_list = new HashSet<>();
+        recursionLevel = 0;
+        mailList = new HashSet<>();
         phones = new HashSet<>();
     }
 
     /** repacks archive with specified name including nested *.zip and *.gz to another archive according to
      *  Java Basics task statement
      * */
-    private void repack_nested_zip(String zip_name, String new_zip_name) throws IOException{
+    private void repackZip(String zipFileName, String repackedPath) throws IOException{
         reset();
 
-        FileInputStream input = new FileInputStream(new File(zip_name));
-        FileOutputStream output = new FileOutputStream(new File(new_zip_name));
+        // opening source *.zip - file
+        File zipFile = new File(zipFileName);
 
-        //performs on-fly archives repacking
-        //invokes recursively
-        view_nested(input, output);
+        // forming name for repacked *.zip - file
+        StringBuilder repackedNameFormer = new StringBuilder(repackedPath);
 
-        input.close();
-        output.close();
+        if (!repackedPath.isEmpty() && !repackedPath.endsWith(File.separator)) {
+            repackedNameFormer.append(File.separator);
+        }
+
+        repackedNameFormer.append(zipFile.getName());
+        repackedNameFormer.insert(repackedNameFormer.lastIndexOf(RefInfo.separatorDot), RefInfo.repackedFileNameSuffix);
+
+        try ( FileInputStream input = new FileInputStream(zipFile);
+              FileOutputStream output = new FileOutputStream(new File(repackedNameFormer.toString()))
+            ){
+                //performs on-fly archives repacking
+                //invokes recursively
+                processNestedZip(input, output);
+        } catch (FileNotFoundException exc) {
+            System.err.println("Error in ZipQueue.repackZip: input/output file isn't found");
+            System.err.println("Error description: " + exc.getMessage());
+
+            log.log(Level.SEVERE, "Error: input/output file isn't found\nDescription: ", exc);
+            System.exit(1);
+        }
     }
 
-    /** clears storages before new archive repacking*/
+    /** clears mail and phone storages before new archive repacking */
     private void reset() {
-        recursion_level = 0;
-        mail_list.clear();
+        recursionLevel = 0;
+        mailList.clear();
         phones.clear();
     }
 
     /** recursive method for nested archives repacking */
-    private void view_nested(InputStream input, OutputStream output) throws IOException {
-        System.out.println(">> Nesting level: " + recursion_level);
-        ++recursion_level;
+    private void processNestedZip(InputStream input, OutputStream output) throws IOException {
+        System.out.println(">> Nesting level: " + recursionLevel);
+        log.info(">> Nesting level: " + recursionLevel);
+
+        ++recursionLevel;
 
         ZipInputStream zin = new ZipInputStream(input);
         ZipOutputStream zos = new ZipOutputStream(output);
 
-        ZipEntry in_entry;
+        ZipEntry inEntry;
 
-        while((in_entry = zin.getNextEntry()) != null) {
-            if(in_entry.isDirectory()) {
-                System.out.println("Repacked directory: " + in_entry.getName());
+        while((inEntry = zin.getNextEntry()) != null) {
+            if(inEntry.isDirectory()) {
+                System.out.println("Repacked directory: " + inEntry.getName());
+                log.info("Repacked directory: " + inEntry.getName());
 
-                zos.putNextEntry(new ZipEntry(in_entry.getName()));
+                zos.putNextEntry(new ZipEntry(inEntry.getName()));
             } else {
-                System.out.println("Repacking file: " +  in_entry.getName());
-                zos.putNextEntry(new ZipEntry(in_entry.getName()));
+                System.out.println("Repacking file: " +  inEntry.getName());
+                log.info("Repacking file: " +  inEntry.getName());
+
+                zos.putNextEntry(new ZipEntry(inEntry.getName()));
 
                 //nested *.zip archives processing
-                if(in_entry.getName().endsWith(RefInfo.zip_ext)) {
+                if(inEntry.getName().endsWith(RefInfo.zipFileExtension)) {
                     //recursive invoking of method if we are in nested archive
-                    view_nested(zin, zos);
+                    processNestedZip(zin, zos);
                 //processing *.gz archives
-                } else if (in_entry.getName().endsWith(RefInfo.gzip_ext)){
-                    GZIPInputStream gz_in = new GZIPInputStream(zin);
-                    GZIPOutputStream gz_os = new GZIPOutputStream(zos);
+                } else if (inEntry.getName().endsWith(RefInfo.gzipFileExtension)){
+                    GZIPInputStream gzIn = new GZIPInputStream(zin);
+                    GZIPOutputStream gzOut = new GZIPOutputStream(zos);
 
-                    parseLines(gz_in, gz_os);
+                    parseLines(gzIn, gzOut);
                     //tells to output stream about the end of writing into it but doesn't close this stream
-                    gz_os.finish();
+                    gzOut.finish();
                 //processing ordinary data files
                 } else {
                     parseLines(zin, zos);
@@ -90,9 +138,9 @@ class ZipQueue {
             }
         }
         //saves unique e-mails and phones if all source archive entries are read
-        if(--recursion_level == 0) {
-            saveSortedData(RefInfo.sorted_phones_filename, zos, phones);
-            saveSortedData(RefInfo.sorted_emails_filename, zos, mail_list);
+        if(--recursionLevel == 0) {
+            saveSortedData(RefInfo.sortedPhonesFileName, zos, phones);
+            saveSortedData(RefInfo.sortedEmailsFileName, zos, mailList);
 
             zin.close();
             zos.close();
@@ -111,63 +159,55 @@ class ZipQueue {
         String line;
         while ((line = reader.readLine()) != null) {
             //defining is it "suitable" line
-            int dog_index = line.indexOf(RefInfo.sep_dog);
-            if(dog_index > 0) {
+            int atIndex = line.indexOf(RefInfo.separatorAt);
+            if(atIndex > 0) {
                 //separating phone number from e-mails set
                 //using regular expression due to lines without spaces between phone number and first e-mail in line
-                int mail_beg_index = line.substring(0, dog_index).replaceAll(RefInfo.regexp_sep_clean,
-                                        RefInfo.sep_space).lastIndexOf(RefInfo.sep_space);
+                int mailBeginIndex = line.substring(0, atIndex).replaceAll(RefInfo.regexpSeparatorsToSpace,
+                                        RefInfo.separatorSpace).lastIndexOf(RefInfo.separatorSpace);
 
                 //processing phone number: changing city code if necessary
-                int left_br_index = line.indexOf(RefInfo.left_bracket);
-                int right_br_index = line.indexOf(RefInfo.right_bracket);
+                int leftBracketIndex = line.indexOf(RefInfo.leftBracket);
+                int rightBracketIndex = line.indexOf(RefInfo.rightBracket);
 
-                StringBuilder phone_str = new StringBuilder(line.substring(0, mail_beg_index));
+                StringBuilder phoneStr = new StringBuilder(line.substring(0, mailBeginIndex));
 
-                if(right_br_index > 0 && left_br_index > 0) {
+                if(rightBracketIndex > 0 && leftBracketIndex > 0) {
                     //getting substitution code instead of source city code
-                    String sub_code = RefInfo.phone_codes_sub.get(line.substring(left_br_index + 1,
-                                                                                 right_br_index).trim());
+                    String sub_code = RefInfo.phoneCodesSubstitution.get(line.substring(leftBracketIndex + 1,
+                                                                         rightBracketIndex).trim());
                     if(sub_code != null) {
-                        phone_str.replace(left_br_index + 1, right_br_index, sub_code);
+                        phoneStr.replace(leftBracketIndex + 1, rightBracketIndex, sub_code);
                     }
                 }
 
                 //saving modified line in stream
-                String save_phone = phone_str.toString();
+                String savedPhone = phoneStr.toString();
 
-                writer.write(save_phone, 0, save_phone.length());
-                writer.write(line, mail_beg_index, line.length() - mail_beg_index);
-
-                //formatting phone number according task statement
-                String formatted_phone = save_phone.replaceAll(RefInfo.regexp_phone_trim, RefInfo.sep_no_sign);
-
-
-
-//                writer.write(phone_str.toString(), 0, phone_str.length());
-//                writer.write(line, mail_beg_index, line.length() - mail_beg_index);
+                writer.write(savedPhone, 0, savedPhone.length());
+                writer.write(line, mailBeginIndex, line.length() - mailBeginIndex);
 
                 //formatting phone number according task statement
-//                String formatted_phone = phone_str.toString().replaceAll(RefInfo.regexp_phone_trim,
-//                                                                         RefInfo.sep_no_sign);
+                String formattedPhone = savedPhone.replaceAll(RefInfo.regexpSeparatorsToNoSign,
+                                                               RefInfo.separatorNoSign);
 
-                left_br_index = formatted_phone.indexOf(RefInfo.left_bracket);
+                leftBracketIndex = formattedPhone.indexOf(RefInfo.leftBracket);
 
-                right_br_index = formatted_phone.indexOf(RefInfo.right_bracket);
-                right_br_index += 1;    //increasing index due to space insertion in previous line
+                rightBracketIndex = formattedPhone.indexOf(RefInfo.rightBracket);
+                rightBracketIndex += 1;    //increasing index due to space insertion in previous line
 
                 //saving unique phone number
-                phones.add((new StringBuffer(formatted_phone)).insert(left_br_index,
-                            RefInfo.sep_space).insert(right_br_index + 1, RefInfo.sep_space).toString());
+                phones.add((new StringBuffer(formattedPhone)).insert(leftBracketIndex,
+                            RefInfo.separatorSpace).insert(rightBracketIndex + 1, RefInfo.separatorSpace).toString());
 
                 //processing e-mails set in line
-                StringTokenizer token_set = new StringTokenizer(line.substring(mail_beg_index),
-                                                                RefInfo.mail_separators);
+                StringTokenizer tokenSet = new StringTokenizer(line.substring(mailBeginIndex),
+                                                                RefInfo.mailSeparators);
 
-                while(token_set.hasMoreTokens()) {
-                    String mail = token_set.nextToken().trim();
-                    if(mail.endsWith(RefInfo.mail_domain)) {
-                        mail_list.add(mail);
+                while(tokenSet.hasMoreTokens()) {
+                    String mail = tokenSet.nextToken().trim();
+                    if(mail.endsWith(RefInfo.mailDomain)) {
+                        mailList.add(mail);
                     }
                 }
             //simply copying line to output data file if it doesn't contain with phones and mails
@@ -194,6 +234,7 @@ class ZipQueue {
 
         //writing data to entry in archive
         System.out.println("File: " + filename + " Sorted list: ");
+
         for(String s : sorted) {
             System.out.println(s);
 
@@ -207,31 +248,85 @@ class ZipQueue {
 
     public static void main(String[] args) {
         try {
-            ZipQueue zip_proc = new ZipQueue();
+            // getting program start time
+            long startTime = System.currentTimeMillis();
 
             //checking command line arguments number
-            if(args.length < 1) {
+            if(args.length != RefInfo.cmdLineArgsNumber) {
                 System.out.println("ZipQueue utility for nested *.zip and *.gz archives repacking");
-                System.out.println("Usage: java -jar utility_name.jar [path/archive_name.zip] [result_path/]");
-                System.out.println("Result: utility puts the repacked archive \"<archive_name>v2.zip\" in user specified folder");
-                return;
+                System.out.println("Usage: ");
+                System.out.println("       java -jar utility_name.jar [path/archive_name.zip] [result_path/]");
+                System.out.println("         or");
+                System.out.println("       java -classpath ./[path_to_package_folder] study.task.ZipQueue " +
+                                   "[path/archive_name.zip] [result_path/]");
+                System.out.println("Result: utility puts the repacked archive \"<archive_name>v2.zip\" " +
+                                   "in user specified folder");
+
+                System.exit(1);
             }
 
-            //getting source archive name and creating resulting archive name according to specified destination folder
-            int dot_index = args[0].lastIndexOf(RefInfo.sep_dot);
-            int name_begin = args[0].replace(RefInfo.sep_back_slash, RefInfo.sep_slash).lastIndexOf(RefInfo.sep_slash);
+            // switching on logging
+            // resource file should be in the same folder with package folders. Using "absolute" path
+            LogManager.getLogManager().readConfiguration(
+                    study.task.ZipQueue.class.getResourceAsStream("/res/logging.properties"));
 
-            String repacked_name = args[1];
-            repacked_name += (args[1].replace(RefInfo.sep_back_slash, RefInfo.sep_slash).lastIndexOf(RefInfo.sep_slash) !=
-                                (args[1].length() - 1)) ? RefInfo.sep_slash : RefInfo.sep_no_sign;
-            repacked_name += args[0].substring(((name_begin != -1) ? name_begin + 1 : 0), dot_index);
-            repacked_name += RefInfo.name_suffix + RefInfo.zip_ext;
+            // creating folder for logging
+            if(log.getParent().getLevel() != Level.OFF) {
+                //getting name of log folder
+                Properties logTraits = new Properties();
+                logTraits.load(study.task.ZipQueue.class.getResourceAsStream("/res/logging.properties"));
+
+                String logPattern = logTraits.getProperty("java.util.logging.FileHandler.pattern");
+
+                if(logPattern != null) {
+                    String logPath = new File(logPattern).getParent();
+
+                    File logFolder = new File(logPath);
+
+                    if (!logFolder.exists() && !logFolder.mkdirs()) {
+                        throw new LoggingFolderException("Unable to create folder for *.log files specified in resources");
+                    }
+                }
+            }
+
+            // saving information to log about OS and JRE
+            log.info("--------------------------------------------------------------------------");
+
+            log.info("OS:\n - name: " + System.getProperty("os.name") + "\n - platform: " +
+                    System.getProperty("os.arch") + "\n - version: " + System.getProperty("os.version") + "\n");
+
+            log.info("JRE:\n - vendor: " + System.getProperty("java.specification.vendor") + "\n - name: " +
+                    System.getProperty("java.specification.name") + "\n - version: " +
+                    System.getProperty("java.specification.version") + "\n");
 
             //starting for archives repacking
-            zip_proc.repack_nested_zip(args[0], repacked_name);
-        }
-        catch (IOException exc){
-            System.out.println("Error: " + exc.getMessage());
+            ZipQueue zipProcessor = new ZipQueue();
+            zipProcessor.repackZip(args[0], args[1]);
+
+            // saving information to log about elapsed time
+            long elapsedTime = System.currentTimeMillis() - startTime;
+
+            System.out.println("Elapsed time: " + elapsedTime + " ms");
+
+            log.fine("Elapsed time: " + elapsedTime + " ms");
+            log.fine("Successfully repacked!");
+
+            log.info("--------------------------------------------------------------------------");
+        } catch (ZipException exc) {
+            System.err.println("Error: error in zip/gzip data processing: " + exc.getMessage());
+
+            log.log(Level.SEVERE, "Error: error in zip/gzip data processing: \nDescription: ", exc);
+            System.exit(1);
+        } catch (IOException exc) {
+            System.err.println("Error: problems in I/O: " + exc.getMessage());
+
+            log.log(Level.SEVERE, "Error: problems in I/O\nDescription: ", exc);
+            System.exit(1);
+        } catch (LoggingFolderException exc) {
+            System.err.println("Error: no log folder was created: " + exc.getMessage());
+
+            log.log(Level.SEVERE, "Error: no log folder was created: ", exc);
+            System.exit(1);
         }
     }
 }

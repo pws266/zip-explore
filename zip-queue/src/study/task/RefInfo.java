@@ -1,6 +1,6 @@
 package study.task;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 
 /**
  * This class is a reference for class ZipQueue.
@@ -16,59 +16,35 @@ class RefInfo {
         throw new AssertionError();
     }
 
-    static final String zip_ext;                //extension of *.zip file
-    static final String gzip_ext;               //extension of *.gzip file
-    static final String sorted_phones_filename; //file name for unique phones storage
-    static final String sorted_emails_filename; //file name for unique e-mails storage
-    static final String mail_domain;            //mail domain (org) for unique e-mails saving
-    static final String mail_separators;        //set of separators between e-mail entries in line
+    static final int cmdLineArgsNumber = 2;    //correct arguments number in command line
 
-    static final String sep_dog;        //the at sign in e-mail
-    static final String sep_space;      //space sign
-    static final String sep_no_sign;    //empty string for symbol removing from string
-    static final String sep_dot;        //point sign
-    static final String sep_slash;      //linux slash in path definition
-    static final String sep_back_slash; //windows slash in path definition
+    static final String zipFileExtension = ".zip";    //extension of *.zip file
+    static final String gzipFileExtension = ".gz";    //extension of *.gzip file
+    static final String sortedPhonesFileName = "phones.txt";    //file name for unique phones storage
+    static final String sortedEmailsFileName = "emails.txt";    //file name for unique e-mails storage
+    static final String mailDomain = ".org";         //mail domain (org) for unique e-mails saving
+    static final String mailSeparators = " \t,;";    //set of separators between e-mail entries in line
 
+    static final String separatorAt = "@";           //the at sign in e-mail
+    static final String separatorSpace = " ";        //space sign
+    static final String separatorNoSign = "";        //empty string for symbol removing from string
+    static final String separatorDot = ".";          //point sign
 
-    static final String left_bracket;       //left round bracket sign
-    static final String right_bracket;      //right round bracket sign
+    static final String leftBracket = "(";    //left round bracket sign
+    static final String rightBracket = ")";   //right round bracket sign
 
-    static final String regexp_sep_clean;   //regular expression for cleaning separators at the phone number end
-    static final String regexp_phone_trim;   //regular expression for phone number trimming
+    //regular expression for replacing separators at the phone number end to spaces
+    static final String regexpSeparatorsToSpace = "[" + mailSeparators.substring(1) + "]";
+    //regular expression for removing all separators in phone number
+    static final String regexpSeparatorsToNoSign = "[" + mailSeparators + "-]";
 
-    static final String name_suffix;    //suffix for destination archive name
+    static final String repackedFileNameSuffix = "v2";      //suffix for destination archive name
 
-    static final Hashtable<String, String> phone_codes_sub;     //table with original and substitutional phone codes
-
-    //static fields initialization
-    static {
-        zip_ext = ".zip";
-        gzip_ext = ".gz";
-        sorted_phones_filename = "phones.txt";
-        sorted_emails_filename = "emails.txt";
-        mail_domain = ".org";
-        mail_separators = " \t,;";
-
-        sep_dog = "@";
-        sep_space = " ";
-        sep_no_sign = "";
-        sep_dot = ".";
-        sep_slash = "/";
-        sep_back_slash = "\\";
-
-        left_bracket = "(";
-        right_bracket = ")";
-
-        regexp_sep_clean = "[" + mail_separators.substring(1) + "]";
-        regexp_phone_trim = "[" + mail_separators + "-]";
-
-        name_suffix = "v2";
-
-        phone_codes_sub = new Hashtable<>();
-
-        phone_codes_sub.put("101", "401");
-        phone_codes_sub.put("202", "802");
-        phone_codes_sub.put("301", "321");
-    }
+    //table with original phone codes and its substitutions
+    //NOTE! Using "double braces" initialization via anonymous class and its static initialization block
+    static final HashMap<String, String> phoneCodesSubstitution = new HashMap<String, String>() {{
+        put("101", "401");
+        put("202", "802");
+        put("301", "321");
+    }};
 }

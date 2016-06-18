@@ -4,6 +4,8 @@
 	<property name="dir.classes" value="${dir.build}/classes" />
 	<property name="dir.jar" value="${dir.build}/jar" />
 	<property name="dir.src" value="../src" />
+	<property name="dir.srcrc" value="../src/res" />
+	<property name="dir.dstrc" value="${dir.classes}/res" />
 	<property name="dir.zip" value="../../files" />
 	<property name="dir.repack" value="${dir.zip}" />
 	<property name="file.jar" value="${dir.jar}/java.basics.jar" />
@@ -20,7 +22,15 @@
 		<echo>Creating folders for compilation results</echo>
 		<mkdir dir="${dir.build}" />
 		<mkdir dir="${dir.classes}" />
+		<mkdir dir="${dir.dstrc}" />
 		<mkdir dir="${dir.jar}" />
+	</target>
+
+	<target name="copyrc" description="Copying resource files">
+		<echo>Copying resourse file with logging settings</echo>
+		<copy todir="${dir.dstrc}">
+			<fileset dir="${dir.srcrc}" />
+		</copy>
 	</target>
 
 	<target name="compile" depends="mkdirs" description="Compiling project">
@@ -28,7 +38,7 @@
 		<javac srcdir="${dir.src}" destdir="${dir.classes}" />
 	</target>
 	
-	<target name="makejar" depends="compile" description="Creating executable *.jar archive">
+	<target name="makejar" depends="compile, copyrc" description="Creating executable *.jar archive">
 		<echo>Packing application in ${file.jar}</echo>
 		<jar destfile="${file.jar}"
 			 basedir="${dir.classes}"
