@@ -10,41 +10,51 @@ import java.util.HashMap;
  */
 
 /** Reference with string constants */
-class RefInfo {
+public class RefInfo {
     //private constructor for preventing class instances creation
     private RefInfo() {
         throw new AssertionError();
     }
 
-    static final int cmdLineArgsNumber = 2;    //correct arguments number in command line
+    public static final int CMD_LINE_ARGS_NUMBER = 2;    //correct arguments number in command line
 
-    static final String zipFileExtension = ".zip";    //extension of *.zip file
-    static final String gzipFileExtension = ".gz";    //extension of *.gzip file
-    static final String sortedPhonesFileName = "phones.txt";    //file name for unique phones storage
-    static final String sortedEmailsFileName = "emails.txt";    //file name for unique e-mails storage
-    static final String mailDomain = ".org";         //mail domain (org) for unique e-mails saving
-    static final String mailSeparators = " \t,;";    //set of separators between e-mail entries in line
+    public static final String ZIP_FILE_EXTENSION = ".zip";    //extension of *.zip file
+    public static final String GZIP_FILE_EXTENSION = ".gz";    //extension of *.gzip file
+    public static final String SORTED_PHONES_FILE_NAME = "phones.txt";    //file name for unique phones storage
+    public static final String SORTED_EMAILS_FILE_NAME = "emails.txt";    //file name for unique e-mails storage
+    public static final String MAIL_DOMAIN = ".org";         //mail domain (org) for unique e-mails saving
 
-    static final String separatorAt = "@";           //the at sign in e-mail
-    static final String separatorSpace = " ";        //space sign
-    static final String separatorNoSign = "";        //empty string for symbol removing from string
-    static final String separatorDot = ".";          //point sign
+    public static final String SEPARATOR_AT = "@";           //the at sign in e-mail
+    public static final String SEPARATOR_SPACE = " ";        //space sign
+    public static final String SEPARATOR_DOT = ".";          //point sign
 
-    static final String leftBracket = "(";    //left round bracket sign
-    static final String rightBracket = ")";   //right round bracket sign
+    public static final String LEFT_BRACKET = "(";    //left round bracket sign
+    public static final String RIGHT_BRACKET = ")";   //right round bracket sign
 
-    //regular expression for replacing separators at the phone number end to spaces
-    static final String regexpSeparatorsToSpace = "[" + mailSeparators.substring(1) + "]";
-    //regular expression for removing all separators in phone number
-    static final String regexpSeparatorsToNoSign = "[" + mailSeparators + "-]";
-
-    static final String repackedFileNameSuffix = "v2";      //suffix for destination archive name
+    // regular expression for phone/e-mails line separation
+    public static final String REGEXP_LINE = "[\\s;,-]+";
+    public static final String REPACKED_FILE_NAME_SUFFIX = "v2";      //suffix for destination archive name
 
     //table with original phone codes and its substitutions
     //NOTE! Using "double braces" initialization via anonymous class and its static initialization block
-    static final HashMap<String, String> phoneCodesSubstitution = new HashMap<String, String>() {{
+    public static final HashMap<String, String> PHONE_CODES_SUBSTITUTION = new HashMap<String, String>() {{
         put("101", "401");
         put("202", "802");
         put("301", "321");
     }};
+
+    // "absolute" path to logging resource properties file
+    public static final String LOG_RESOURCE_FILE_PATH = "/res/logging.properties";
+    // separator in *.log - file
+    public static final String LOG_SEPARATOR =
+                               "--------------------------------------------------------------------------";
+    // annotation
+    public static final String CMD_ANNOTATION = "ZipQueue utility for nested *.zip and *.gz archives repacking\n" +
+                               "Usage: \n" +
+                               "       java -jar utility_name.jar [path/archive_name.zip] [result_path/]\n" +
+                               "         or\n" +
+                               "       java -classpath ./[path_to_package_folder] study.task.ZipQueue " +
+                               "[path/archive_name.zip] [result_path/]\n" +
+                               "Result: utility puts the repacked archive \"<archive_name>v2.zip\" " +
+                               "in user specified folder\n";
 }
