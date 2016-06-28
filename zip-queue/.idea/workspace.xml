@@ -28,16 +28,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="ZipQueue.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ZipQueue.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/study/task/ZipQueue.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3060">
-              <caret line="204" column="0" selection-start-line="204" selection-start-column="0" selection-end-line="204" selection-end-column="0" />
+            <state relative-caret-position="2113">
+              <caret line="226" column="0" selection-start-line="226" selection-start-column="0" selection-end-line="226" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#2835#2836#0" expanded="true" />
-                <element signature="e#2877#2878#0" expanded="true" />
-                <marker date="1467148831272" expanded="true" signature="5954:7697" ph="..." />
+                <marker date="1467151190458" expanded="true" signature="5954:7697" ph="..." />
               </folding>
             </state>
           </provider>
@@ -53,7 +51,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RefInfo.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="RefInfo.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/study/task/RefInfo.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="840">
@@ -152,7 +150,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -254,7 +252,7 @@
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -842,11 +840,12 @@
       <workItem from="1466682977770" duration="20718000" />
       <workItem from="1466769069613" duration="59746000" />
       <workItem from="1467140683208" duration="8507000" />
+      <workItem from="1467150840505" duration="388000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="307803000" />
+    <option name="totallyTimeSpent" value="308191000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
@@ -958,9 +957,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2835#2836#0" expanded="true" />
-            <element signature="e#2877#2878#0" expanded="true" />
-            <marker date="1467148831272" expanded="true" signature="5954:7697" ph="..." />
+            <marker date="1467151190458" expanded="true" signature="5954:7697" ph="..." />
           </folding>
         </state>
       </provider>
@@ -986,9 +983,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2835#2836#0" expanded="true" />
-            <element signature="e#2877#2878#0" expanded="true" />
-            <marker date="1467148831272" expanded="true" signature="5954:7697" ph="..." />
+            <marker date="1467151190458" expanded="true" signature="5954:7697" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1006,9 +1001,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2835#2836#0" expanded="true" />
-            <element signature="e#2877#2878#0" expanded="true" />
-            <marker date="1467148831272" expanded="true" signature="5954:7697" ph="..." />
+            <marker date="1467151190458" expanded="true" signature="5954:7697" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1026,9 +1019,7 @@
           <caret line="277" column="13" selection-start-line="277" selection-start-column="13" selection-end-line="277" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2835#2836#0" expanded="true" />
-            <element signature="e#2877#2878#0" expanded="true" />
-            <marker date="1467148831272" expanded="true" signature="5954:7697" ph="..." />
+            <marker date="1467151190458" expanded="true" signature="5954:7697" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1046,9 +1037,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2835#2836#0" expanded="true" />
-            <element signature="e#2877#2878#0" expanded="true" />
-            <marker date="1467148831272" expanded="true" signature="5954:7697" ph="..." />
+            <marker date="1467151190458" expanded="true" signature="5954:7697" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1059,9 +1048,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2835#2836#0" expanded="true" />
-            <element signature="e#2877#2878#0" expanded="true" />
-            <marker date="1467148831272" expanded="true" signature="5954:7697" ph="..." />
+            <marker date="1467151190458" expanded="true" signature="5954:7697" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1074,9 +1061,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2835#2836#0" expanded="true" />
-            <element signature="e#2877#2878#0" expanded="true" />
-            <marker date="1467148831272" expanded="true" signature="5954:7697" ph="..." />
+            <marker date="1467151190458" expanded="true" signature="5954:7697" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1088,9 +1073,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2835#2836#0" expanded="true" />
-            <element signature="e#2877#2878#0" expanded="true" />
-            <marker date="1467148831272" expanded="true" signature="5954:7697" ph="..." />
+            <marker date="1467151190458" expanded="true" signature="5954:7697" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1101,9 +1084,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2835#2836#0" expanded="true" />
-            <element signature="e#2877#2878#0" expanded="true" />
-            <marker date="1467148831272" expanded="true" signature="5954:7697" ph="..." />
+            <marker date="1467151190458" expanded="true" signature="5954:7697" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1175,10 +1156,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="750">
           <caret line="55" column="101" selection-start-line="55" selection-start-column="101" selection-end-line="55" selection-end-column="101" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#3864#3872#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1186,9 +1163,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1590">
           <caret line="112" column="32" selection-start-line="112" selection-start-column="16" selection-end-line="112" selection-end-column="32" />
-          <folding>
-            <marker date="1466802067497" expanded="true" signature="1680:1806" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1196,9 +1170,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="9" column="33" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1214,12 +1185,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="855">
           <caret line="74" column="0" selection-start-line="68" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
-          <folding>
-            <element signature="e#480#488#0" expanded="true" />
-            <element signature="e#821#829#0" expanded="true" />
-            <element signature="e#989#997#0" expanded="true" />
-            <element signature="e#1179#1187#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1227,7 +1192,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1235,15 +1199,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1406">
           <caret line="43" column="6" selection-start-line="43" selection-start-column="6" selection-end-line="43" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/study/task/RefInfo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="840">
-          <caret line="58" column="31" selection-start-line="58" selection-start-column="31" selection-end-line="58" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1251,7 +1206,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="371">
           <caret line="402" column="27" selection-start-line="402" selection-start-column="23" selection-end-line="402" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1259,7 +1213,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="186">
           <caret line="69" column="0" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1275,7 +1228,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
           <caret line="244" column="0" selection-start-line="244" selection-start-column="0" selection-end-line="244" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1283,7 +1235,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="186">
           <caret line="280" column="0" selection-start-line="280" selection-start-column="0" selection-end-line="280" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1291,7 +1242,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="207">
           <caret line="261" column="0" selection-start-line="261" selection-start-column="0" selection-end-line="261" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1299,7 +1249,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="245">
           <caret line="183" column="0" selection-start-line="183" selection-start-column="0" selection-end-line="183" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1307,7 +1256,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="335">
           <caret line="160" column="18" selection-start-line="160" selection-start-column="16" selection-end-line="160" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1321,14 +1269,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/study/task/ZipQueue.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3060">
-          <caret line="204" column="0" selection-start-line="204" selection-start-column="0" selection-end-line="204" selection-end-column="0" />
+        <state relative-caret-position="2113">
+          <caret line="226" column="0" selection-start-line="226" selection-start-column="0" selection-end-line="226" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2835#2836#0" expanded="true" />
-            <element signature="e#2877#2878#0" expanded="true" />
-            <marker date="1467148831272" expanded="true" signature="5954:7697" ph="..." />
+            <marker date="1467151190458" expanded="true" signature="5954:7697" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/study/task/RefInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="840">
+          <caret line="58" column="31" selection-start-line="58" selection-start-column="31" selection-end-line="58" selection-end-column="31" />
+          <folding />
         </state>
       </provider>
     </entry>

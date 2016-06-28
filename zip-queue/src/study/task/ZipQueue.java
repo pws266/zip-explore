@@ -207,7 +207,7 @@ public class ZipQueue {
     }
 
     /** sorts data in specified containter and puts it in file with given name in archive defined by output stream */
-    private void saveSortedData(String filename, ZipOutputStream zos, Set<String> data) throws IOException {
+    private void saveSortedData(String filename, ZipOutputStream zos, SortedSet<String> data) throws IOException {
         zos.putNextEntry(new ZipEntry(filename));
 
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(zos, StandardCharsets.UTF_8));
@@ -215,16 +215,11 @@ public class ZipQueue {
         //writing data to entry in archive
         log.info("File: " + filename + " Sorted list: ");
 
-        data.forEach(item->{
-            log.info(item);
-            try {
-                writer.write(item);
-                writer.newLine();
-            } catch (IOException exc) {
-                log.log(Level.SEVERE, "Error: problems in I/O while saving sorted data: ", exc);
-                System.exit(1);
-            }
-        });
+        for(String s : data) {
+            log.info(s);
+            writer.write(s);
+            writer.newLine();
+        }
 
         writer.flush();
         zos.closeEntry();
