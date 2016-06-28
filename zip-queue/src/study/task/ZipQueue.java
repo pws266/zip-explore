@@ -69,6 +69,27 @@ public class ZipQueue {
         phones.clear();
     }
 
+    /**
+     * ZipInputStream wrapper. Provides compatibility with JDK 1.7
+     * Prevents unauthorized closing by GZipInputStream.
+     */
+    private class UnclosedZipInputStream extends InputStream {
+        private ZipInputStream zipIn;   // reference to external input stream
+
+        UnclosedZipInputStream(ZipInputStream zipIn) {
+            this.zipIn = zipIn;
+        }
+
+        @Override
+        public int read() throws IOException {
+            return zipIn.read();
+        }
+
+        // empty method preventing external stream closing
+        @Override
+        public void close() {}
+    }
+
     /** recursive method for nested archives repacking */
     private void processNestedZip(InputStream input, OutputStream output, int recursionLevel) throws IOException {
         log.info(">> Nesting level: " + recursionLevel);
@@ -94,7 +115,9 @@ public class ZipQueue {
                     processNestedZip(zin, zos, recursionLevel + 1);
                 //processing *.gz archives
                 } else if (inEntry.getName().endsWith(GZIP_FILE_EXTENSION)){
-                    GZIPInputStream gzIn = new GZIPInputStream(zin);
+                    UnclosedZipInputStream unclosedZipIn = new UnclosedZipInputStream(zin);
+
+                    GZIPInputStream gzIn = new GZIPInputStream(unclosedZipIn);
                     GZIPOutputStream gzOut = new GZIPOutputStream(zos);
 
                     parseLines(gzIn, gzOut);
@@ -164,18 +187,19 @@ public class ZipQueue {
                     writer.write(line, 0, lbIndex);
                     writer.write(subCode);
                     writer.write(line, rbIndex, line.length() - rbIndex);
-
-                    writer.newLine();
+                }
+                else {
+                    writer.write(line);
                 }
 
                 phoneToSort.insert(lbToSortIndex, SEPARATOR_SPACE).insert(rbToSortIndex + 2, SEPARATOR_SPACE);
                 phones.add(phoneToSort.toString());
-
-                continue;
+            }
+            else {
+                // copying line if it doesn't contain phones and e-mails or no substitution phone code was found
+                writer.write(line);
             }
 
-            // copying line if it doesn't contain phones and e-mails or no substitution phone code was found
-            writer.write(line);
             writer.newLine();
         }
 
